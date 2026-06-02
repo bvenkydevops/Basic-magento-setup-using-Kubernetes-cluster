@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: magento
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+
+        root /var/www/html/pub;
+        index index.php;
+
+        charset utf-8;
+
+        client_max_body_size 100M;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+       location /static/ {
+
+        location ~ ^/static/version {
+        rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
+       }
+
+        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public";
+       }
+
+         try_files $uri $uri/ /static.php?resource=$uri&$args;
+       }
+        location /media/ {
+            try_files $uri $uri/ /get.php?$args;
+        }
+
+        location ~ \.php$ {
+            try_files $uri =404;
+
+            fastcgi_pass php-fpm:9000;
+            fastcgi_index index.php;
+
+            include fastcgi_params;
+
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param MAGE_RUN_TYPE store;
+            fastcgi_param MAGE_RUN_CODE default;
+
+            fastcgi_read_timeout 600;
+
+            fastcgi_buffers 16 16k;
+            fastcgi_buffer_size 32k;
+            fastcgi_busy_buffers_size 64k;
+            fastcgi_temp_file_write_size 64k;
+        }
+
+        location ~* \.(log|htaccess)$ {
+            deny all;
+        }
+    }

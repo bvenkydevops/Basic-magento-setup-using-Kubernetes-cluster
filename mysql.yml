@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: magento
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: magento
+  labels:
+    app: magento-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magento-mysql
+  template:
+    metadata:
+      labels:
+        app: magento-mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0.46
+
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+
+        - name: MYSQL_DATABASE
+          value: magento
+
+        ports:
+        - containerPort: 3306
+
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: magento
+spec:
+  selector:
+    app: magento-mysql
+  ports:
+  - port: 3306
+    targetPort: 3306

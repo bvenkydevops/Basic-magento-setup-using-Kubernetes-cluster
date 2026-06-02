@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: magento-pv-claim
+  namespace: magento
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-fpm
+  namespace: magento
+  labels:
+    app: magento-php
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magento-php
+  template:
+    metadata:
+      labels:
+        app: magento-php
+    spec:
+      containers:
+      - name: php-fpm
+        image: magento-php:8.3
+        imagePullPolicy: Never
+
+        ports:
+        - containerPort: 9000
+
+        volumeMounts:
+        - name: magento-storage
+          mountPath: /var/www/html
+
+      volumes:
+      - name: magento-storage
+        persistentVolumeClaim:
+          claimName: magento-pv-claim
+      volumes:
+      - name: magento-storage
+        persistentVolumeClaim:
+          claimName: magento-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-fpm
+  namespace: magento
+spec:
+  selector:
+    app: magento-php
+  ports:
+  - port: 9000
+    targetPort: 9000
