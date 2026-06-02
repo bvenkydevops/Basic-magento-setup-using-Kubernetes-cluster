@@ -56,6 +56,7 @@ Environment:
 - Kubernetes v1.34
 - Docker Desktop Kubernetes
 - macOS
+- - - 
 **2. Architecture Diagram**
 ```
 Browser
