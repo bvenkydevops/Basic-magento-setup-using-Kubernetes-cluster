@@ -75,6 +75,7 @@ PHP-FPM Pod
 | MySQL | Redis | OpenSearch |
 ---------------------------------
 ```
+- - - 
 **3. Namespace Creation**
 File:
 magento-namespace.yml
@@ -86,7 +87,7 @@ kubectl get ns
 
 Verification:
 kubectl get ns magento
-
+- - - 
 **4. Shared Storage**
 
 File:
@@ -101,7 +102,7 @@ Shared Magento codebase
 
 Verification:
 kubectl get pvc -n magento
-
+- - - 
 **5. MySQL Deployment**
 
 File:
@@ -115,7 +116,7 @@ kubectl apply -f mysql.yml
 Verify:
 kubectl get pods -n magento
 kubectl logs deploy/mysql -n magento
-
+- - - 
 **6. Redis Deployment**
 
 File:
@@ -125,9 +126,8 @@ Deploy:
 kubectl apply -f redis.yml
 
 Verify:
-
 kubectl get pods -n magento
-
+- - - 
 **7. OpenSearch Deployment**
 
 File:
@@ -138,7 +138,7 @@ kubectl apply -f opensearch.yml
 
 Verify:
 kubectl logs deploy/opensearch -n magento
-
+- - - 
 **8. PHP-FPM Deployment**
 
 File:
@@ -149,7 +149,7 @@ kubectl apply -f php-fpm.yml
 
 Verify:
 kubectl get svc php-fpm -n magento
-
+- - - 
 **9. Nginx Deployment**
 
 File:
@@ -162,7 +162,7 @@ kubectl apply -f nginx.yml
 
 Verify:
 kubectl exec -it deploy/nginx -n magento -- sh
-
+- - - 
 **10. Magento Installation**
 kubectl exec -it deploy/php-fpm -n magento -- sh
 ```
@@ -184,12 +184,13 @@ php bin/magento setup:install \
 --timezone=UTC \
 --use-rewrites=1
 ```
+- - - 
 **11. Port Forward Testing**
 kubectl port-forward svc/nginx 8080:80 -n magento
 
 Access:
 http://localhost:8080
-
+- - - 
 **12. Static Content Issue**
 
 Problem:
@@ -209,7 +210,7 @@ rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
 Verification:
 styles-m.css -> 200
 require.js -> 200
-
+- - - 
 **13. Production Mode**
 php bin/magento deploy:mode:set production
 
@@ -218,7 +219,7 @@ php bin/magento setup:static-content:deploy -f
 
 Verify:
 find pub/static -type f | wc -l
-
+- - - 
 **14. Ingress Installation**
 
 Install:
@@ -226,7 +227,7 @@ kubectl apply -f ingress-nginx-controller.yaml
 
 Verify:
 kubectl get pods -n ingress-nginx
-
+- - - 
 **15. Ingress Configuration**
 
 File:
@@ -237,14 +238,14 @@ host: magento.local
 
 Apply:
 kubectl apply -f magento-ingress.yml
-
+- - - 
 **16. Hosts File**
 sudo vi /etc/hosts
 Add:
 127.0.0.1 magento.local
 Verify:
 ping magento.local
-
+- - - 
 **17. Ingress 502 Issue**
 
 Problem:
@@ -262,7 +263,7 @@ annotations:
   nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
   nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
   nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
-  
+- - -   
 **18. Local Nginx Conflict**
 
 Problem:
@@ -284,7 +285,7 @@ curl http://magento.local -I
 
 returns:
 HTTP/1.1 200 OK
-
+- - - 
 **19. Final Verification**
 kubectl get pods -n magento
 kubectl get svc -n magento
@@ -295,7 +296,7 @@ curl http://magento.local -I
 
 Expected:
 HTTP/1.1 200 OK
-
+- - - 
 **20. Interview Questions Section**
 
 Include:
