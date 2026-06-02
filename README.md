@@ -54,7 +54,7 @@ Environment:
 - Docker Desktop Kubernetes
 - macOS
 **2. Architecture Diagram**
-
+```
 Browser
    |
 Ingress
@@ -70,7 +70,7 @@ PHP-FPM Pod
 ---------------------------------
 | MySQL | Redis | OpenSearch |
 ---------------------------------
-
+```
 **3. Namespace Creation**
 File:
 magento-namespace.yml
@@ -161,7 +161,7 @@ kubectl exec -it deploy/nginx -n magento -- sh
 
 **10. Magento Installation**
 kubectl exec -it deploy/php-fpm -n magento -- sh
-
+```
 Install:
 php bin/magento setup:install \
 --base-url=http://localhost:8080 \
@@ -179,7 +179,7 @@ php bin/magento setup:install \
 --currency=USD \
 --timezone=UTC \
 --use-rewrites=1
-
+```
 **11. Port Forward Testing**
 kubectl port-forward svc/nginx 8080:80 -n magento
 
@@ -197,11 +197,11 @@ Page loaded without CSS
 Root Cause:
 Missing Magento static version rewrite
 Fix:
-
+```
 location ~ ^/static/version {
 rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
 }
-
+```
 Verification:
 styles-m.css -> 200
 require.js -> 200
