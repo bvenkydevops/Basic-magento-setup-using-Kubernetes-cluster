@@ -40,7 +40,7 @@ Magento2-Kubernetes-Deployment/
 
 
 **1. Project Overview**
-   # Magento 2 on Kubernetes
+Magento 2 on Kubernetes
 
 This project demonstrates deploying Magento 2 on Kubernetes using:
 
