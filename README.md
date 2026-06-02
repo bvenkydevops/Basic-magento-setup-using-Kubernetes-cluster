@@ -1,5 +1,6 @@
 # Basic-magento-setup-using-Kubernetes-cluster
-|Magento2-Kubernetes-Deployment/
+```
+Magento2-Kubernetes-Deployment/
 │
 ├── README.md
 ├── docs/
@@ -33,7 +34,7 @@
 │   └── varnish.yml
 │
 └── screenshots/
-|
+```
 =========================================================================================================================================
 **1. Project Overview**
    # Magento 2 on Kubernetes
