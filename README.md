@@ -35,7 +35,10 @@ Magento2-Kubernetes-Deployment/
 │
 └── screenshots/
 ```
-====================================================================================\n
+
+
+
+
 **1. Project Overview**
    # Magento 2 on Kubernetes
 
